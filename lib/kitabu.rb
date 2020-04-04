@@ -62,7 +62,7 @@ module Kitabu
     root_dir ||= Pathname.new(Dir.pwd)
     path = root_dir.join("config/kitabu.yml")
 
-    raise "Invalid Kitabu directory; couldn't found config/kitabu.yml file." unless File.file?(path)
+    raise "Invalid Kitabu directory; couldn't find config/kitabu.yml file." unless File.file?(path)
     content = File.read(path)
     erb = ERB.new(content).result
     YAML.load(erb).with_indifferent_access

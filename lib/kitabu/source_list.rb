@@ -17,11 +17,9 @@ module Kitabu
 
     def initialize(root_dir)
       @root_dir = root_dir
-      @source = root_dir.join('text')
+      @source = root_dir.join(source_directory)
     end
 
-    #
-    #
     def each_chapter(&block)
       files_grouped_by_chapter.each(&block)
     end
@@ -50,6 +48,10 @@ module Kitabu
       end
     end
 
+    def source_directory
+      config.fetch(:source_directory, 'text')
+    end
+
     # Check if path is a valid entry.
     # Files/directories that start with a dot or underscore will be skipped.
     #
@@ -68,6 +70,12 @@ module Kitabu
     def valid_file?(entry)
       ext = File.extname(entry).gsub(/\./, "").downcase
       File.file?(source.join(entry)) && EXTENSIONS.include?(ext) && entry !~ IGNORE_FILES
+    end
+
+    private
+
+    def config
+      Kitabu.config(root_dir)
     end
   end
 end

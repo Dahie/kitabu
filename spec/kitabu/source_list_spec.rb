@@ -8,6 +8,22 @@ describe Kitabu::SourceList do
   let(:relative) { entries.collect {|e| e.to_s.gsub(/^#{Regexp.escape(source.to_s)}\//, "")} }
   subject(:source_list) { Kitabu::SourceList.new(root) }
 
+  describe '#source_directory' do
+    context 'source_directory defined in configuration' do
+      it 'defaults uses defined directory' do
+        allow(Kitabu).to receive(:config)
+          .and_return({ source_directory: 'source' })
+        expect(source_list.source).to eq(root.join('source'))
+      end
+    end
+
+    context "source_directory not defined in configuration" do
+      it 'defaults to "text"' do
+        expect(source_list.source).to eq(root.join('text'))
+      end
+    end
+  end
+
   context "when filtering entries" do
     it "skips dot directories" do
       expect(relative).not_to include(".")
